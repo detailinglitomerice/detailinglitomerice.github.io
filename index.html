@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DetailingLitak</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=Playfair+Display:wght@700&amp;display=swap');
+
+        :root {
+            --accent: #00d4ff;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        .nav-link {
+            position: relative;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .nav-link:after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -2px;
+            left: 0;
+            background-color: var(--accent);
+            transition: width 0.4s cubic-bezier(0.4, 0.0, 0.2, 1);
+        }
+        
+        .nav-link:hover:after {
+            width: 100%;
+        }
+
+        .hero-bg {
+            background: linear-gradient(rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0.85)), 
+                        url('https://picsum.photos/id/1015/2000/1200') center/cover no-repeat;
+        }
+
+        .section-title {
+            position: relative;
+            display: inline-block;
+        }
+        
+        .section-title:after {
+            content: '';
+            position: absolute;
+            width: 60px;
+            height: 3px;
+            background: linear-gradient(to right, #00d4ff, #00a8cc);
+            bottom: -8px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .price-row {
+            transition: all 0.3s cubic-bezier(0.4, 0.0, 0.2, 1);
+        }
+        
+        .price-row:hover {
+            transform: translateX(12px);
+            background-color: #0a0a0a;
+            box-shadow: 0 10px 30px -10px rgba(0, 212, 255, 0.3);
+        }
+
+        .btn-hover {
+            transition: all 0.4s cubic-bezier(0.4, 0.0, 0.2, 1);
+        }
+        
+        .btn-hover:hover {
+            transform: translateY(-4px) scale(1.05);
+            box-shadow: 0 20px 25px -5px rgba(0, 212, 255, 0.4);
+        }
+
+        .fade-in {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s cubic-bezier(0.4, 0.0, 0.2, 1);
+        }
+        
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    </style>
+</head>
+<body class="bg-zinc-950 text-white font-sans overflow-x-hidden">
+    <!-- NAVIGACE -->
+    <nav class="fixed top-0 left-0 right-0 z-50 bg-zinc-950/95 backdrop-blur-lg border-b border-zinc-800">
+        <div class="max-w-7xl mx-auto px-8 py-5 flex items-center justify-between">
+            <!-- LOGO - ZDE VLOŽÍŠ SVÉ -->
+            <div class="flex items-center gap-3">
+                <img id="logo" 
+                     src="https://via.placeholder.com/180x60/111827/00d4ff?text=DETAILING+LITAK" 
+                     alt="DetailingLitak Logo" 
+                     class="h-12 w-auto transition-transform hover:scale-105">
+                <div>
+                    <h1 class="text-2xl font-bold tracking-tighter">DETAILING<span class="text-[#00d4ff]">LITAK</span></h1>
+                </div>
+            </div>
+
+            <!-- MENU -->
+            <div class="flex items-center gap-10 text-lg font-medium">
+                <a href="#o-nas" class="nav-link text-white hover:text-[#00d4ff]">O NÁS</a>
+                <a href="#cenik" class="nav-link text-white hover:text-[#00d4ff]">CENÍK</a>
+                <a href="#kontakt" class="nav-link text-white hover:text-[#00d4ff]">KONTAKT</a>
+            </div>
+
+            <a href="#kontakt" 
+               class="btn-hover bg-[#00d4ff] hover:bg-[#00b8e0] text-zinc-950 font-semibold px-8 py-3 rounded-full flex items-center gap-2 text-sm uppercase tracking-widest">
+                <i class="fas fa-car"></i>
+                OBJEDNAT DETAILING
+            </a>
+        </div>
+    </nav>
+
+    <!-- HERO -->
+    <section class="hero-bg min-h-screen flex items-center pt-20">
+        <div class="max-w-7xl mx-auto px-8 text-center">
+            <div class="max-w-3xl mx-auto">
+                <h2 class="text-7xl font-bold leading-none tracking-tighter mb-6">
+                    PROFESIONÁLNÍ<br>DETAILING<br>AUT
+                </h2>
+                <p class="text-2xl text-zinc-400 mb-12">
+                    Nejvyšší kvalita čištění, leštění a ochrany vašich vozidel v Česku
+                </p>
+                <div class="flex gap-6 justify-center">
+                    <a href="#o-nas" 
+                       class="btn-hover bg-white text-zinc-950 px-10 py-5 rounded-full font-semibold text-lg inline-flex items-center gap-3 hover:bg-[#00d4ff] hover:text-white transition-all">
+                        <i class="fas fa-arrow-down"></i>
+                        ZJISTIT VÍCE
+                    </a>
+                    <a href="#cenik" 
+                       class="btn-hover border-2 border-white hover:border-[#00d4ff] px-10 py-5 rounded-full font-semibold text-lg inline-flex items-center gap-3">
+                        ZOBRAZIT CENÍK
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- SCROLL INDICATOR -->
+        <div class="absolute bottom-10 left-1/2 flex flex-col items-center gap-2 text-zinc-400">
+            <div class="text-xs tracking-widest">SCROLLUJ DOLŮ</div>
+            <i class="fas fa-chevron-down animate-bounce text-3xl"></i>
+        </div>
+    </section>
+
+    <!-- O NÁS -->
+    <section id="o-nas" class="py-28 bg-zinc-950">
+        <div class="max-w-7xl mx-auto px-8">
+            <div class="grid grid-cols-12 gap-16 items-center">
+                <!-- Text -->
+                <div class="col-span-12 lg:col-span-7">
+                    <div class="sticky top-28">
+                        <span class="text-[#00d4ff] font-mono text-sm tracking-[4px]">OD ROKU 2015</span>
+                        <h2 class="section-title text-6xl font-bold tracking-tighter mt-4 mb-10">
+                            O NÁS
+                        </h2>
+                        
+                        <div class="space-y-8 text-xl text-zinc-300">
+                            <p>
+                                DetailingLitak je prémiové auto detailing studio se sídlem v Praze. 
+                                Již více než 10 let se specializujeme na komplexní péči o automobily – 
+                                od běžného mytí až po luxusní keramické a grafitové ochrany.
+                            </p>
+                            <p>
+                                Náš tým tvoří certifikovaní specialisté, kteří pracují pouze s 
+                                nejlepšími produkty světových značek (Gyeon, CarPro, Koch Chemie, 
+                                Rupes). Každé auto pro nás není jen zakázka – je to umělecké dílo.
+                            </p>
+                            <p>
+                                Pracujeme na všech značkách – od běžných vozů až po supersporty 
+                                a veterány. Naše dílna je vybavena nejmodernější technologií, 
+                                včetně lakovny s kontrolou prachu a speciálním osvětlením.
+                            </p>
+                        </div>
+
+                        <div class="mt-12 flex gap-8">
+                            <div>
+                                <div class="text-5xl font-bold text-[#00d4ff]">450+</div>
+                                <div class="text-zinc-400">spokojených zákazníků</div>
+                            </div>
+                            <div>
+                                <div class="text-5xl font-bold text-[#00d4ff]">10</div>
+                                <div class="text-zinc-400">let zkušeností</div>
+                            </div>
+                            <div>
+                                <div class="text-5xl font-bold text-[#00d4ff]">98%</div>
+                                <div class="text-zinc-400">opakovaných zákazníků</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Obrázek + stats -->
+                <div class="col-span-12 lg:col-span-5">
+                    <div class="bg-zinc-900 rounded-3xl overflow-hidden border border-zinc-800">
+                        <img src="https://picsum.photos/id/1016/800/1000" 
+                             alt="DetailingLitak dílna" 
+                             class="w-full h-auto">
+                    </div>
+                    <div class="mt-8 bg-zinc-900/70 backdrop-blur p-8 rounded-3xl border border-zinc-800">
+                        <div class="flex items-center gap-6">
+                            <i class="fas fa-medal text-5xl text-amber-400"></i>
+                            <div>
+                                <h4 class="font-semibold text-2xl">Certifikace</h4>
+                                <p class="text-zinc-400">Gyeon Certified Detailer • CarPro Certified • IGL Pro</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CENÍK -->
+    <section id="cenik" class="py-28 bg-black">
+        <div class="max-w-7xl mx-auto px-8">
+            <div class="text-center mb-16">
+                <span class="text-[#00d4ff] font-mono text-sm tracking-[4px]">CENY 2025</span>
+                <h2 class="section-title text-6xl font-bold tracking-tighter mt-4">CENÍK SLUŽEB</h2>
+                <p class="text-zinc-400 mt-6 max-w-md mx-auto">
+                    Všechny ceny jsou orientační. Přesná cena se určuje podle velikosti a stavu vozu.
+                </p>
+            </div>
+
+            <div class="overflow-x-auto">
+                <table class="w-full min-w-[800px] border-collapse">
+                    <thead>
+                        <tr class="border-b border-zinc-800">
+                            <th class="text-left py-6 px-8 font-medium text-zinc-400">SLUŽBA</th>
+                            <th class="text-left py-6 px-8 font-medium text-zinc-400">POPIS</th>
+                            <th class="text-right py-6 px-8 font-medium text-zinc-400">CENA od</th>
+                        </tr>
+                    </thead>
+                    <tbody class="text-lg">
+                        <tr class="price-row border-b border-zinc-800">
+                            <td class="py-8 px-8 font-semibold">Základní mytí exteriéru</td>
+                            <td class="py-8 px-8 text-zinc-400">Ruční mytí + voskování</td>
+                            <td class="py-8 px-8 text-right font-mono">1 290 Kč</td>
+                        </tr>
+                        <tr class="price-row border-b border-zinc-800">
+                            <td class="py-8 px-8 font-semibold">Kompletní vnější detailing</td>
+                            <td class="py-8 px-8 text-zinc-400">Mytí + dekontaminace + leštění + vosk</td>
+                            <td class="py-8 px-8 text-right font-mono">4 990 Kč</td>
+                        </tr>
+                        <tr class="price-row border-b border-zinc-800">
+                            <td class="py-8 px-8 font-semibold">Interiér Premium</td>
+                            <td class="py-8 px-8 text-zinc-400">Vysávání + čistění plastů + impregnace</td>
+                            <td class="py-8 px-8 text-right font-mono">3 490 Kč</td>
+                        </tr>
+                        <tr class="price-row border-b border-zinc-800 bg-zinc-900/50">
+                            <td class="py-8 px-8 font-semibold text-[#00d4ff]">KOMPLETNÍ BALÍČEK</td>
+                            <td class="py-8 px-8 text-zinc-400">Vnější + vnitřní detailing + keramický vosk</td>
+                            <td class="py-8 px-8 text-right font-mono text-[#00d4ff]">9 990 Kč</td>
+                        </tr>
+                        <tr class="price-row border-b border-zinc-800">
+                            <td class="py-8 px-8 font-semibold">Keramická ochrana 9H</td>
+                            <td class="py-8 px-8 text-zinc-400">Profesionální keramická ochrana na 3–5 let</td>
+                            <td class="py-8 px-8 text-right font-mono">14 900 Kč</td>
+                        </tr>
+                        <tr class="price-row border-b border-zinc-800">
+                            <td class="py-8 px-8 font-semibold">Přelakování světlometů</td>
+                            <td class="py-8 px-8 text-zinc-400">Obnova a ochrana předních světel</td>
+                            <td class="py-8 px-8 text-right font-mono">2 490 Kč</td>
+                        </tr>
+                        <tr class="price-row">
+                            <td class="py-8 px-8 font-semibold">Grafitová ochrana</td>
+                            <td class="py-8 px-8 text-zinc-400">Nejvyšší stupeň ochrany laku</td>
+                            <td class="py-8 px-8 text-right font-mono">24 900 Kč</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="mt-12 text-center">
+                <p class="text-zinc-400 mb-6">Chcete přesnou nabídku na váš vůz?</p>
+                <a href="#kontakt" 
+                   class="btn-hover inline-block bg-[#00d4ff] text-zinc-950 font-semibold px-12 py-6 rounded-full text-xl">
+                    ZÍSKAT OSOBNÍ NABÍDKU
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- KONTAKT -->
+    <section id="kontakt" class="py-28 bg-zinc-950 border-t border-zinc-800">
+        <div class="max-w-7xl mx-auto px-8 grid grid-cols-12 gap-16">
+            <!-- Formulář -->
+            <div class="col-span-12 lg:col-span-7">
+                <h2 class="section-title text-6xl font-bold tracking-tighter mb-12">KONTAKTUJTE NÁS</h2>
+                
+                <form id="contact-form" class="space-y-8">
+                    <div class="grid grid-cols-2 gap-8">
+                        <div>
+                            <label class="block text-sm text-zinc-400 mb-2">JMÉNO A PŘÍJMENÍ</label>
+                            <input type="text" required 
+                                   class="w-full bg-zinc-900 border border-zinc-700 focus:border-[#00d4ff] rounded-2xl px-6 py-5 outline-none text-lg">
+                        </div>
+                        <div>
+                            <label class="block text-sm text-zinc-400 mb-2">TELEFON</label>
+                            <input type="tel" required 
+                                   class="w-full bg-zinc-900 border border-zinc-700 focus:border-[#00d4ff] rounded-2xl px-6 py-5 outline-none text-lg">
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm text-zinc-400 mb-2">E-MAIL</label>
+                        <input type="email" required 
+                               class="w-full bg-zinc-900 border border-zinc-700 focus:border-[#00d4ff] rounded-2xl px-6 py-5 outline-none text-lg">
+                    </div>
+
+                    <div>
+                        <label class="block text-sm text-zinc-400 mb-2">ZPRÁVA / POŽADAVEK</label>
+                        <textarea rows="6" required 
+                                  class="w-full bg-zinc-900 border border-zinc-700 focus:border-[#00d4ff] rounded-3xl px-6 py-5 outline-none text-lg resize-none"></textarea>
+                    </div>
+
+                    <button type="submit"
+                            class="btn-hover w-full bg-white text-zinc-950 py-7 text-2xl font-semibold rounded-3xl hover:bg-[#00d4ff] hover:text-white">
+                        ODESLAT OBJEDNÁVKU
+                    </button>
+                </form>
+            </div>
+
+            <!-- Info -->
+            <div class="col-span-12 lg:col-span-5">
+                <div class="bg-zinc-900 rounded-3xl p-10 h-full border border-zinc-800">
+                    <div class="space-y-12">
+                        <div class="flex gap-6">
+                            <i class="fas fa-map-marker-alt text-4xl text-[#00d4ff]"></i>
+                            <div>
+                                <h4 class="font-semibold text-2xl">Adresa</h4>
+                                <p class="text-zinc-400 mt-1">Průmyslová 123<br>Praha 9 – Letňany, 199 00</p>
+                            </div>
+                        </div>
+
+                        <div class="flex gap-6">
+                            <i class="fas fa-phone text-4xl text-[#00d4ff]"></i>
+                            <div>
+                                <h4 class="font-semibold text-2xl">Telefon</h4>
+                                <a href="tel:+420777123456" class="text-3xl font-mono text-white hover:text-[#00d4ff]">+420 777 123 456</a>
+                            </div>
+                        </div>
+
+                        <div class="flex gap-6">
+                            <i class="fas fa-envelope text-4xl text-[#00d4ff]"></i>
+                            <div>
+                                <h4 class="font-semibold text-2xl">E-mail</h4>
+                                <a href="mailto:info@detailinglitak.cz" class="text-3xl hover:text-[#00d4ff]">info@detailinglitak.cz</a>
+                            </div>
+                        </div>
+
+                        <div class="pt-8 border-t border-zinc-700">
+                            <p class="text-sm text-zinc-400">Otevřeno:</p>
+                            <p class="font-medium">Po–Pá: 8:00 – 18:00</p>
+                            <p class="font-medium">So: 9:00 – 14:00</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="bg-black py-12 border-t border-zinc-800">
+        <div class="max-w-7xl mx-auto px-8 text-center text-zinc-500 text-sm">
+            <p>© 2025 DetailingLitak • Všechna práva vyhrazena</p>
+            <p class="mt-2">Profesionální auto detailing Praha</p>
+        </div>
+    </footer>
+
+    <script>
+        // Tailwind script init
+        function initTailwind() {
+            // nothing extra needed
+        }
+
+        // Smooth scroll + active nav highlight (optional bonus)
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth' });
+                }
+            });
+        });
+
+        // Form submit fake response
+        document.getElementById('contact-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const btn = this.querySelector('button');
+            const originalText = btn.textContent;
+            
+            btn.innerHTML = `
+                <i class="fas fa-check mr-3"></i>
+                ODESLÁNO ✓
+            `;
+            btn.style.backgroundColor = '#22c55e';
+            
+            setTimeout(() => {
+                alert('Děkujeme! Vaše zpráva byla odeslána. Ozveme se do 24 hodin.');
+                btn.textContent = originalText;
+                btn.style.backgroundColor = '';
+                this.reset();
+            }, 1500);
+        });
+
+        // Fade in animation on scroll
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, { threshold: 0.15 });
+
+        document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+        
+        // Make some sections fade-in
+        document.querySelectorAll('section').forEach(section => {
+            section.classList.add('fade-in');
+        });
+
+        // Logo placeholder - user can replace src
+        console.log('%c✅ Stránka načtena! Nahraď logo v <img id="logo"> svým obrázkem.', 'color:#00d4ff; font-size:13px');
+    </script>
+</body>
+</html>
