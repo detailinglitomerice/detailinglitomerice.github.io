@@ -183,13 +183,13 @@
       });
 
       const templateParams = {
-        name: form.name.value.trim(),
-        phone: form.phone.value.trim(),
-        email: form.email.value.trim(),
-        message: form.message.value.trim(),
-        date: currentDate,
-        title: "Nová objednávka / kontakt z webu"   // pokud chceš použít {{title}} v šabloně
-      };
+  name: form.name.value.trim(),
+  phone: form.phone.value.trim(),
+  email: form.email.value.trim(),
+  message: form.message.value.trim(),
+  date: currentDate,
+  title: "Nová objednávka / kontakt z webu"   // pokud ho používáš v subjectu
+};
 
       emailjs.send(
         'service_grki78a',      // ← Service ID
