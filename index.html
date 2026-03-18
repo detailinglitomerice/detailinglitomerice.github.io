@@ -238,24 +238,24 @@
     }
 
     // místo složitého HTML jen jednoduchý text
-function sendOrderFromCart() {
-    const name  = document.getElementById('order-name').value.trim();
-    const phone = document.getElementById('order-phone').value.trim();
-    const email = document.getElementById('order-email').value.trim();
-    const note  = document.getElementById('order-note').value.trim();
+// místo složitého HTML jen jednoduchý text
+let cartSummaryText = '';
+cart.forEach(item => {
+    const itemTotal = item.price * item.qty;
+    cartSummaryText += `• ${item.name} × ${item.qty} ks → ${itemTotal.toLocaleString('cs-CZ')} Kč\n`;
+});
 
-    if (cart.length === 0) {
-        alert('Košík je prázdný.');
-        return;
-    }
-    if (!name || !phone || !email) {
-        alert('Prosím vyplňte jméno, telefon a email.');
-        return;
-    }
-    if (!email.includes('@')) {
-        alert('Zadejte platný email.');
-        return;
-    }
+const total = cart.reduce((sum, item) => sum + item.price * item.qty, 0);
+
+const templateParams = {
+    customer_name:   name,
+    customer_phone:  phone,
+    customer_email:  email,
+    cart_summary_text: cartSummaryText,    // ← nový název proměnné
+    total:           total.toLocaleString('cs-CZ'),
+    message:         note || "Žádná další poznámka.",
+    date:            new Date().toLocaleString('cs-CZ', { dateStyle: 'long', timeStyle: 'short' })
+};
 
     // Jednoduchý textový výpis služeb – přesně jak jsi chtěl
     let cartSummaryText = cart.map(item =>
