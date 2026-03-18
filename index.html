@@ -240,44 +240,44 @@
 
     // Odeslání objednávky z košíku – template_za7zkkk
     function sendOrderFromCart() {
-        if (cart.length === 0) {
-            alert('Košík je prázdný.');
-            return;
-        }
-
-        // Generujeme HTML řádky pro tabulku v emailu
-        let cartRows = '';
-        cart.forEach(item => {
-            const itemTotal = item.price * item.qty;
-            cartRows += `
-                <tr>
-                    <td style="padding:12px;border-bottom:1px solid #e5e7eb;">${item.name}</td>
-                    <td style="padding:12px;text-align:center;border-bottom:1px solid #e5e7eb;">${item.qty}</td>
-                    <td style="padding:12px;text-align:right;border-bottom:1px solid #e5e7eb;">${itemTotal.toLocaleString('cs-CZ')} Kč</td>
-                </tr>`;
-        });
-
-        const total = cart.reduce((sum, item) => sum + item.price * item.qty, 0);
-
-        const templateParams = {
-            cart_summary_html: cartRows,
-            total: total.toLocaleString('cs-CZ'),
-            message: "Standardní objednávka z košíku – prosím kontaktujte mě pro domluvu termínu.",
-            date: new Date().toLocaleString('cs-CZ', { dateStyle: 'long', timeStyle: 'short' })
-        };
-
-        emailjs.send('service_grki78a', 'template_za7zkkk', templateParams)
-            .then(() => {
-                alert('Objednávka úspěšně odeslána! Brzy se ozveme.');
-                cart = [];
-                updateCartDisplay();
-                toggleCart();
-            })
-            .catch(err => {
-                console.error('Chyba:', err);
-                alert('Nepodařilo se odeslat objednávku. Zkuste prosím kontaktní formulář.');
-            });
+    if (cart.length === 0) {
+        alert('Košík je prázdný.');
+        return;
     }
+
+    // Generujeme ČISTÉ HTML řádky (bez escapování)
+    let cartRows = '';
+    cart.forEach(item => {
+        const itemTotal = item.price * item.qty;
+        cartRows += 
+            '<tr>' +
+                '<td style="padding:12px;border-bottom:1px solid #e5e7eb;">' + item.name + '</td>' +
+                '<td style="padding:12px;text-align:center;border-bottom:1px solid #e5e7eb;">' + item.qty + '</td>' +
+                '<td style="padding:12px;text-align:right;border-bottom:1px solid #e5e7eb;">' + itemTotal.toLocaleString('cs-CZ') + ' Kč</td>' +
+            '</tr>';
+    });
+
+    const total = cart.reduce((sum, item) => sum + item.price * item.qty, 0);
+
+    const templateParams = {
+        cart_summary_html: cartRows,  // ← teď je to opravdové HTML, ne escapované
+        total: total.toLocaleString('cs-CZ'),
+        message: "Standardní objednávka z košíku – prosím kontaktujte mě pro domluvu termínu.",
+        date: new Date().toLocaleString('cs-CZ', { dateStyle: 'long', timeStyle: 'short' })
+    };
+
+    emailjs.send('service_grki78a', 'template_za7zkkk', templateParams)
+        .then(() => {
+            alert('Objednávka úspěšně odeslána! Brzy se ozveme.');
+            cart = [];
+            updateCartDisplay();
+            toggleCart();
+        })
+        .catch(err => {
+            console.error('Chyba při odesílání:', err);
+            alert('Nepodařilo se odeslat. Zkuste kontaktní formulář.');
+        });
+}
 
     // Původní kontaktní formulář (kontrola, že funguje i nadále)
     const form = document.getElementById('kontakt-form');
