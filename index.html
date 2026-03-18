@@ -7,10 +7,8 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
-
     <!-- EmailJS knihovna -->
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
-
     <style>
         :root { --accent: #00d4ff; }
         html { scroll-behavior: smooth; }
@@ -97,7 +95,6 @@
                     <button onclick="addToCart(1, 'Základní mytí exteriéru', 499)" class="w-full bg-[#00d4ff] hover:bg-[#00b0d4] text-zinc-950 font-semibold py-3 rounded-xl">Přidat do košíku</button>
                 </div>
             </div>
-
             <div class="bg-zinc-900 rounded-2xl p-6 flex flex-col justify-between">
                 <div>
                     <h3 class="text-xl font-bold mb-2">Mytí kol + pneumatik</h3>
@@ -108,7 +105,6 @@
                     <button onclick="addToCart(2, 'Mytí kol + pneumatik', 200)" class="w-full bg-[#00d4ff] hover:bg-[#00b0d4] text-zinc-950 font-semibold py-3 rounded-xl">Přidat do košíku</button>
                 </div>
             </div>
-
             <div class="bg-zinc-900 rounded-2xl p-6 flex flex-col justify-between">
                 <div>
                     <h3 class="text-xl font-bold mb-2">Úklid interiéru</h3>
@@ -119,7 +115,6 @@
                     <button onclick="addToCart(3, 'Úklid interiéru', 490)" class="w-full bg-[#00d4ff] hover:bg-[#00b0d4] text-zinc-950 font-semibold py-3 rounded-xl">Přidat do košíku</button>
                 </div>
             </div>
-
             <div class="bg-zinc-900 rounded-2xl p-6 flex flex-col justify-between border-2 border-[#00d4ff]">
                 <div>
                     <h3 class="text-xl font-bold mb-2 text-[#00d4ff]">Kompletní základní balíček</h3>
@@ -139,26 +134,22 @@
     <div class="p-6">
         <div class="flex justify-between items-center mb-6">
             <h2 class="text-2xl font-bold">Dokončit objednávku</h2>
-            <button onclick="toggleCart()" class="text-3xl">&times;</button>
+            <button onclick="toggleCart()" class="text-3xl">×</button>
         </div>
-
         <div id="cart-items" class="space-y-4 mb-6"></div>
-
         <div class="border-t border-zinc-700 pt-4 mb-6">
             <div class="flex justify-between text-xl font-bold">
                 <span>Celkem:</span>
                 <span id="cart-total">0 Kč</span>
             </div>
         </div>
-
-        <!-- Nová část – kontaktní údaje -->
+        <!-- Kontaktní údaje -->
         <div class="space-y-4 mb-6">
-            <input id="order-name" type="text" placeholder="Vaše jméno *" required class="w-full bg-zinc-900 border border-zinc-700 rounded-xl px-4 py-3 text-white">
-            <input id="order-phone" type="tel" placeholder="Telefon *" required class="w-full bg-zinc-900 border border-zinc-700 rounded-xl px-4 py-3 text-white">
-            <input id="order-email" type="email" placeholder="Váš email *" required class="w-full bg-zinc-900 border border-zinc-700 rounded-xl px-4 py-3 text-white">
+            <input id="order-name"   type="text"     placeholder="Vaše jméno *"   required class="w-full bg-zinc-900 border border-zinc-700 rounded-xl px-4 py-3 text-white">
+            <input id="order-phone"  type="tel"      placeholder="Telefon *"      required class="w-full bg-zinc-900 border border-zinc-700 rounded-xl px-4 py-3 text-white">
+            <input id="order-email"  type="email"    placeholder="Váš email *"    required class="w-full bg-zinc-900 border border-zinc-700 rounded-xl px-4 py-3 text-white">
             <textarea id="order-note" placeholder="Poznámka, termín, adresa..." rows="3" class="w-full bg-zinc-900 border border-zinc-700 rounded-xl px-4 py-3 text-white"></textarea>
         </div>
-
         <button onclick="sendOrderFromCart()" class="w-full bg-[#00d4ff] hover:bg-white hover:text-zinc-950 text-zinc-950 py-4 rounded-xl font-bold text-lg transition-colors">
             ODESLAT OBJEDNÁVKU
         </button>
@@ -194,7 +185,7 @@
 
 <script>
     emailjs.init({
-        publicKey: "sxLWM-DVU184sOCjL"   // ← sem vlož svůj skutečný Public Key !!!
+        publicKey: "sxLWM-DVU184sOCjL"
     });
 
     let cart = [];
@@ -247,10 +238,10 @@
     }
 
     function sendOrderFromCart() {
-        const name = document.getElementById('order-name').value.trim();
+        const name  = document.getElementById('order-name').value.trim();
         const phone = document.getElementById('order-phone').value.trim();
         const email = document.getElementById('order-email').value.trim();
-        const note = document.getElementById('order-note').value.trim();
+        const note  = document.getElementById('order-note').value.trim();
 
         if (cart.length === 0) {
             alert('Košík je prázdný.');
@@ -265,29 +256,31 @@
             return;
         }
 
-        // Čisté HTML řádky – spojujeme přes + aby se nic neescapovalo
-        // v sendOrderFromCart()
-let cartRows = cart.map(item => {
-    const itemTotal = item.price * item.qty;
-    return (
-        '<tr>' +
-            '<td style="padding:12px;border-bottom:1px solid #e5e7eb;">' + item.name + '</td>' +
-            '<td style="padding:12px;text-align:center;border-bottom:1px solid #e5e7eb;">' + item.qty + '</td>' +
-            '<td style="padding:12px;text-align:right;border-bottom:1px solid #e5e7eb;">' + itemTotal.toLocaleString('cs-CZ') + ' Kč</td>' +
-        '</tr>'
-    );
-}).join('');
+        // === KLÍČOVÁ ČÁST – čisté HTML bez escapování ===
+        let cartRows = '';
+        cart.forEach(item => {
+            const itemTotal = item.price * item.qty;
+            cartRows += '<tr>';
+            cartRows += '<td style="padding:12px;border-bottom:1px solid #e5e7eb;">' + item.name + '</td>';
+            cartRows += '<td style="padding:12px;text-align:center;border-bottom:1px solid #e5e7eb;">' + item.qty + '</td>';
+            cartRows += '<td style="padding:12px;text-align:right;border-bottom:1px solid #e5e7eb;">' + itemTotal.toLocaleString('cs-CZ') + ' Kč</td>';
+            cartRows += '</tr>';
+        });
+
+        // Kontrola v konzoli – otevři F12 → Console a podívej se
+        console.log('Odesílané HTML řádky tabulky:');
+        console.log(cartRows);
 
         const total = cart.reduce((sum, item) => sum + item.price * item.qty, 0);
 
         const templateParams = {
-            customer_name: name,
-            customer_phone: phone,
-            customer_email: email,
+            customer_name:   name,
+            customer_phone:  phone,
+            customer_email:  email,
             cart_summary_html: cartRows,
-            total: total.toLocaleString('cs-CZ'),
-            message: note || "Žádná další poznámka.",
-            date: new Date().toLocaleString('cs-CZ', { dateStyle: 'long', timeStyle: 'short' })
+            total:           total.toLocaleString('cs-CZ'),
+            message:         note || "Žádná další poznámka.",
+            date:            new Date().toLocaleString('cs-CZ', { dateStyle: 'long', timeStyle: 'short' })
         };
 
         emailjs.send('service_grki78a', 'template_za7zkkk', templateParams)
@@ -295,7 +288,7 @@ let cartRows = cart.map(item => {
                 alert('Objednávka odeslána! Brzy se ozveme.');
                 cart = [];
                 updateCartDisplay();
-                document.getElementById('cart-panel').classList.add('hidden');
+                toggleCart();
                 // vyčištění polí
                 document.getElementById('order-name').value = '';
                 document.getElementById('order-phone').value = '';
@@ -303,8 +296,8 @@ let cartRows = cart.map(item => {
                 document.getElementById('order-note').value = '';
             })
             .catch(err => {
-                console.error(err);
-                alert('Chyba při odesílání. Zkuste to prosím znovu.');
+                console.error('Chyba při odesílání:', err);
+                alert('Nepodařilo se odeslat objednávku. Zkuste to prosím znovu.');
             });
     }
 
@@ -314,7 +307,33 @@ let cartRows = cart.map(item => {
 
     form.addEventListener('submit', function(e) {
         e.preventDefault();
-        // ... tvůj původní kód odesílání zůstává stejný ...
+        const btn = form.querySelector('button');
+        btn.disabled = true;
+        btn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> ODESÍLÁM...';
+
+        const currentDate = new Date().toLocaleString('cs-CZ');
+        const templateParams = {
+            name: form.name.value.trim(),
+            phone: form.phone.value.trim(),
+            email: form.email.value.trim(),
+            message: form.message.value.trim(),
+            date: currentDate
+        };
+
+        emailjs.send('service_grki78a', 'template_wzsl67r', templateParams)
+            .then(() => {
+                success.classList.remove('hidden');
+                form.reset();
+                setTimeout(() => success.classList.add('hidden'), 10000);
+            })
+            .catch(err => {
+                console.error(err);
+                alert('Chyba při odesílání zprávy.');
+            })
+            .finally(() => {
+                btn.disabled = false;
+                btn.innerHTML = 'ODESLAT';
+            });
     });
 </script>
 
