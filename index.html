@@ -239,11 +239,68 @@
 
     // místo složitého HTML jen jednoduchý text
 // místo složitého HTML jen jednoduchý text
-let cartSummaryText = '';
-cart.forEach(item => {
-    const itemTotal = item.price * item.qty;
-    cartSummaryText += `• ${item.name} × ${item.qty} ks → ${itemTotal.toLocaleString('cs-CZ')} Kč\n`;
-});
+function sendOrderFromCart() {
+    // 1. Nejdřív musíme získat hodnoty z polí v košíku
+    const name = document.getElementById('order-name').value.trim();
+    const phone = document.getElementById('order-phone').value.trim();
+    const email = document.getElementById('order-email').value.trim();
+    const note = document.getElementById('order-note').value.trim();
+
+    // 2. Základní kontrola vyplnění
+    if (!name || !phone || !email) {
+        alert('Prosím vyplňte jméno, telefon i email.');
+        return;
+    }
+
+    if (cart.length === 0) {
+        alert('Košík je prázdný.');
+        return;
+    }
+
+    // 3. Příprava textového souhrnu pro tvůj e-mailový template
+    let cartSummaryText = cart.map(item => 
+        `• ${item.name} × ${item.qty} ks (${(item.price * item.qty).toLocaleString('cs-CZ')} Kč)`
+    ).join('\n');
+
+    const total = cart.reduce((sum, item) => sum + item.price * item.qty, 0);
+
+    // 4. Parametry pro EmailJS (musí odpovídat {{závorkám}} v šabloně)
+    const templateParams = {
+        customer_name:    name,
+        customer_phone:   phone,
+        customer_email:   email,
+        cart_summary_text: cartSummaryText, 
+        total:            total.toLocaleString('cs-CZ'),
+        message:          note || "Žádná další poznámka.",
+        date:             new Date().toLocaleString('cs-CZ', { dateStyle: 'long', timeStyle: 'short' })
+    };
+
+    // 5. Samotné odeslání
+    const btn = event.target; // tlačítko, na které se kliklo
+    btn.disabled = true;
+    btn.innerText = 'ODESÍLÁM...';
+
+    emailjs.send('service_grki78a', 'template_za7zkkk', templateParams)
+        .then(() => {
+            alert('Objednávka odeslána! Brzy se ozveme.');
+            cart = []; // Vyprázdnit košík
+            updateCartDisplay();
+            toggleCart();
+            // Vymazat pole
+            document.getElementById('order-name').value = '';
+            document.getElementById('order-phone').value = '';
+            document.getElementById('order-email').value = '';
+            document.getElementById('order-note').value = '';
+        })
+        .catch(err => {
+            console.error('Chyba:', err);
+            alert('Nepodařilo se odeslat. Zkontrolujte připojení.');
+        })
+        .finally(() => {
+            btn.disabled = false;
+            btn.innerText = 'ODESLAT OBJEDNÁVKU';
+        });
+}
 
 const total = cart.reduce((sum, item) => sum + item.price * item.qty, 0);
 
