@@ -266,16 +266,17 @@
         }
 
         // Čisté HTML řádky – spojujeme přes + aby se nic neescapovalo
-        let cartRows = '';
-        cart.forEach(item => {
-            const itemTotal = item.price * item.qty;
-            cartRows += 
-                '<tr>' +
-                    '<td style="padding:12px;border-bottom:1px solid #e5e7eb;">' + item.name + '</td>' +
-                    '<td style="padding:12px;text-align:center;border-bottom:1px solid #e5e7eb;">' + item.qty + '</td>' +
-                    '<td style="padding:12px;text-align:right;border-bottom:1px solid #e5e7eb;">' + itemTotal.toLocaleString('cs-CZ') + ' Kč</td>' +
-                '</tr>';
-        });
+        // v sendOrderFromCart()
+let cartRows = cart.map(item => {
+    const itemTotal = item.price * item.qty;
+    return (
+        '<tr>' +
+            '<td style="padding:12px;border-bottom:1px solid #e5e7eb;">' + item.name + '</td>' +
+            '<td style="padding:12px;text-align:center;border-bottom:1px solid #e5e7eb;">' + item.qty + '</td>' +
+            '<td style="padding:12px;text-align:right;border-bottom:1px solid #e5e7eb;">' + itemTotal.toLocaleString('cs-CZ') + ' Kč</td>' +
+        '</tr>'
+    );
+}).join('');
 
         const total = cart.reduce((sum, item) => sum + item.price * item.qty, 0);
 
