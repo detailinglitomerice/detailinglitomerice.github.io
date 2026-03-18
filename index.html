@@ -320,6 +320,9 @@
             date: currentDate
         };
 
+        console.log('=== ODESÍLANÉ HTML ===');
+console.log(cartRows);
+        
         emailjs.send('service_grki78a', 'template_wzsl67r', templateParams)
             .then(() => {
                 success.classList.remove('hidden');
