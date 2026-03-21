@@ -259,6 +259,7 @@
     const email = document.getElementById('order-email').value.trim();
     const note  = document.getElementById('order-note').value.trim();
 
+    // základní validace
     if (!name || !phone || !email || !/\S+@\S+\.\S+/.test(email)) {
         alert('Prosím vyplňte jméno, telefon a platný email.');
         return;
@@ -268,46 +269,71 @@
         return;
     }
 
-    // Jednoduchý textový formát – vypadá dobře i v plain text emailu
-    const summaryLines = cart.map(item => 
-        `• ${item.name} × ${item.qty} ks   (${(item.price * item.qty).toLocaleString('cs-CZ')} Kč)`
-    );
-    const summary = summaryLines.join('\n');
+    // Generování HTML řádků pro tabulku (přesně jak šablona očekává)
+    let cartRows = '';
+    let totalValue = 0;
 
-    const totalValue = cart.reduce((sum, item) => sum + item.price * item.qty, 0);
+    cart.forEach(item => {
+        const itemTotal = item.price * item.qty;
+        totalValue += itemTotal;
+
+        cartRows += `
+            <tr>
+                <td style="padding:12px; border-bottom:1px solid #d1d5db;">${item.name}</td>
+                <td style="padding:12px; text-align:center; border-bottom:1px solid #d1d5db;">${item.qty}</td>
+                <td style="padding:12px; text-align:right; border-bottom:1px solid #d1d5db;">${itemTotal.toLocaleString('cs-CZ')} Kč</td>
+            </tr>
+        `;
+    });
+
+    // celková částka s Kč
     const total = totalValue.toLocaleString('cs-CZ') + ' Kč';
 
+    // parametry pro EmailJS – pozor na název proměnné cart_summary_html !
     const params = {
         customer_name:     name,
         customer_phone:    phone,
         customer_email:    email,
-        cart_summary_text: summary,                 // ← sedí s {{cart_summary_text}} v šabloně
+        cart_summary_html: cartRows,               // ← toto je klíčové – musí se jmenovat přesně takto
         total:             total,
         message:           note || 'Bez poznámky',
-        date:              new Date().toLocaleString('cs-CZ', { dateStyle: 'long', timeStyle: 'short' })
+        date:              new Date().toLocaleString('cs-CZ', { 
+            dateStyle: 'long', 
+            timeStyle: 'short' 
+        })
     };
 
+    // debug – můžeš si odkomentovat, abys viděl, co se posílá
+    // console.log('Odesílané parametry:', params);
+    // console.log('HTML řádky:', cartRows);
+
     const btn = document.getElementById('send-order-btn');
-    btn.disabled = true;
-    btn.textContent = 'Odesílá se...';
+    if (btn) {
+        btn.disabled = true;
+        btn.textContent = 'Odesílá se...';
+    }
 
     emailjs.send('service_grki78a', 'template_4ma1jh8', params)
-        .then(() => {
+        .then((response) => {
+            console.log('Email odeslán úspěšně:', response.status, response.text);
             document.getElementById('success-popup').classList.remove('hidden');
             cart = [];
             updateCartDisplay();
+            // vyčištění polí
             document.getElementById('order-name').value = '';
             document.getElementById('order-phone').value = '';
             document.getElementById('order-email').value = '';
             document.getElementById('order-note').value = '';
         })
-        .catch(err => {
-            console.error('Chyba:', err);
-            alert('Nepodařilo se odeslat.\nDetail: ' + (err.text || 'Neznámá chyba'));
+        .catch((err) => {
+            console.error('Chyba při odesílání:', err);
+            alert('Nepodařilo se odeslat objednávku.\n\nDetail chyby:\n' + (err.text || err.message || 'Neznámá chyba'));
         })
         .finally(() => {
-            btn.disabled = false;
-            btn.textContent = 'ODESLAT OBJEDNÁVKU';
+            if (btn) {
+                btn.disabled = false;
+                btn.textContent = 'ODESLAT OBJEDNÁVKU';
+            }
         });
 }
 
