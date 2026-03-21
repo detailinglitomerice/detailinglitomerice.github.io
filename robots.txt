@@ -1,4 +1,0 @@
-User-agent: *
-Allow: /
-
-Sitemap: https://detailinglitomerice.github.io/sitemap.xml
