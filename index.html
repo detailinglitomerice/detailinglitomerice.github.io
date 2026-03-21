@@ -268,21 +268,23 @@
         return;
     }
 
-    // Jednoduchý textový výpis – přehledný a bezpečný
-    const summary = cart.map(item =>
-        `  • ${item.name}  × ${item.qty} ks    (${(item.price * item.qty).toLocaleString('cs-CZ')} Kč)`
-    ).join('\n');
+    // Jednoduchý textový formát – vypadá dobře i v plain text emailu
+    const summaryLines = cart.map(item => 
+        `• ${item.name} × ${item.qty} ks   (${(item.price * item.qty).toLocaleString('cs-CZ')} Kč)`
+    );
+    const summary = summaryLines.join('\n');
 
-    const total = cart.reduce((sum, item) => sum + item.price * item.qty, 0);
+    const totalValue = cart.reduce((sum, item) => sum + item.price * item.qty, 0);
+    const total = totalValue.toLocaleString('cs-CZ') + ' Kč';
 
     const params = {
         customer_name:     name,
         customer_phone:    phone,
         customer_email:    email,
-        cart_summary_text: summary,                    // ← teď to sedí s {{cart_summary_text}}
-        total:             total.toLocaleString('cs-CZ') + ' Kč',
+        cart_summary_text: summary,                 // ← sedí s {{cart_summary_text}} v šabloně
+        total:             total,
         message:           note || 'Bez poznámky',
-        date:              new Date().toLocaleString('cs-CZ', { dateStyle: 'long', timeStyle: 'medium' })
+        date:              new Date().toLocaleString('cs-CZ', { dateStyle: 'long', timeStyle: 'short' })
     };
 
     const btn = document.getElementById('send-order-btn');
@@ -300,7 +302,7 @@
             document.getElementById('order-note').value = '';
         })
         .catch(err => {
-            console.error('EmailJS error:', err);
+            console.error('Chyba:', err);
             alert('Nepodařilo se odeslat.\nDetail: ' + (err.text || 'Neznámá chyba'));
         })
         .finally(() => {
