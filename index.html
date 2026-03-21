@@ -268,29 +268,21 @@
         return;
     }
 
-    // Generujeme HTML řádky tabulky – přesně jak šablona očekává
-    let cartRows = '';
-    let total = 0;
+    // Jednoduchý textový výpis – přehledný a bezpečný
+    const summary = cart.map(item =>
+        `  • ${item.name}  × ${item.qty} ks    (${(item.price * item.qty).toLocaleString('cs-CZ')} Kč)`
+    ).join('\n');
 
-    cart.forEach(item => {
-        const itemTotal = item.price * item.qty;
-        total += itemTotal;
-        cartRows += `
-            <tr>
-                <td style="padding:12px; border-bottom:1px solid #d1d5db;">${item.name}</td>
-                <td style="padding:12px; text-align:center; border-bottom:1px solid #d1d5db;">${item.qty}</td>
-                <td style="padding:12px; text-align:right; border-bottom:1px solid #d1d5db;">${itemTotal.toLocaleString('cs-CZ')} Kč</td>
-            </tr>`;
-    });
+    const total = cart.reduce((sum, item) => sum + item.price * item.qty, 0);
 
     const params = {
         customer_name:     name,
         customer_phone:    phone,
         customer_email:    email,
-        cart_summary_html: cartRows,                    // ← KLÍČOVÉ – posíláme HTML, ne text
+        cart_summary_text: summary,                    // ← teď to sedí s {{cart_summary_text}}
         total:             total.toLocaleString('cs-CZ') + ' Kč',
         message:           note || 'Bez poznámky',
-        date:              new Date().toLocaleString('cs-CZ', { dateStyle: 'long', timeStyle: 'short' })
+        date:              new Date().toLocaleString('cs-CZ', { dateStyle: 'long', timeStyle: 'medium' })
     };
 
     const btn = document.getElementById('send-order-btn');
@@ -298,20 +290,18 @@
     btn.textContent = 'Odesílá se...';
 
     emailjs.send('service_grki78a', 'template_4ma1jh8', params)
-        .then((response) => {
-            console.log('Úspěch:', response.status, response.text);
+        .then(() => {
             document.getElementById('success-popup').classList.remove('hidden');
             cart = [];
             updateCartDisplay();
-            // vyčištění polí
             document.getElementById('order-name').value = '';
             document.getElementById('order-phone').value = '';
             document.getElementById('order-email').value = '';
             document.getElementById('order-note').value = '';
         })
-        .catch((err) => {
-            console.error('Chyba EmailJS:', err);
-            alert('Nepodařilo se odeslat.\nDetail: ' + (err.text || err.message || 'Neznámá chyba'));
+        .catch(err => {
+            console.error('EmailJS error:', err);
+            alert('Nepodařilo se odeslat.\nDetail: ' + (err.text || 'Neznámá chyba'));
         })
         .finally(() => {
             btn.disabled = false;
