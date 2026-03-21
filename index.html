@@ -254,59 +254,64 @@
     }
 
     function sendOrderFromCart() {
-        const name  = document.getElementById('order-name').value.trim();
-        const phone = document.getElementById('order-phone').value.trim();
-        const email = document.getElementById('order-email').value.trim();
-        const note  = document.getElementById('order-note').value.trim();
+    const name  = document.getElementById('order-name').value.trim();
+    const phone = document.getElementById('order-phone').value.trim();
+    const email = document.getElementById('order-email').value.trim();
+    const note  = document.getElementById('order-note').value.trim();
 
-        if (!name || !phone || !email || !/\S+@\S+\.\S+/.test(email)) {
-            alert('Prosím vyplňte jméno, telefon a platný email.');
-            return;
-        }
-        if (cart.length === 0) {
-            alert('Košík je prázdný.');
-            return;
-        }
-
-        const summary = cart.map(item => 
-            `• ${item.name} × ${item.qty} ks (${(item.price * item.qty).toLocaleString('cs-CZ')} Kč)`
-        ).join('\n');
-
-        const total = cart.reduce((sum, item) => sum + item.price * item.qty, 0);
-
-        const params = {
-            customer_name: name,
-            customer_phone: phone,
-            customer_email: email,
-            cart_summary_text: summary,
-            total: total.toLocaleString('cs-CZ'),
-            message: note || 'Bez poznámky',
-            date: new Date().toLocaleString('cs-CZ')
-        };
-
-        const btn = document.getElementById('send-order-btn');
-        btn.disabled = true;
-        btn.textContent = 'Odesílá se...';
-
-        emailjs.send('service_grki78a', 'template_za7zkkk', params)
-            .then(() => {
-                document.getElementById('success-popup').classList.remove('hidden');
-                cart = [];
-                updateCartDisplay();
-                document.getElementById('order-name').value = '';
-                document.getElementById('order-phone').value = '';
-                document.getElementById('order-email').value = '';
-                document.getElementById('order-note').value = '';
-            })
-            .catch(err => {
-                console.error(err);
-                alert('Nepodařilo se odeslat objednávku. Zkuste to prosím později.');
-            })
-            .finally(() => {
-                btn.disabled = false;
-                btn.textContent = 'ODESLAT OBJEDNÁVKU';
-            });
+    if (!name || !phone || !email || !/\S+@\S+\.\S+/.test(email)) {
+        alert('Prosím vyplňte jméno, telefon a platný email.');
+        return;
     }
+    if (cart.length === 0) {
+        alert('Košík je prázdný.');
+        return;
+    }
+
+    const summary = cart.map(item => 
+        `• ${item.name} × ${item.qty} ks (${(item.price * item.qty).toLocaleString('cs-CZ')} Kč)`
+    ).join('\n');
+
+    const total = cart.reduce((sum, item) => sum + item.price * item.qty, 0);
+
+    const params = {
+        customer_name:   name,
+        customer_phone:  phone,
+        customer_email:  email,           // ← často se posílá jako reply_to nebo user_email
+        reply_to:        email,           // ← velmi často potřeba!
+        to_email:        "detailinglitomerice@gmail.com",   // ← kam má email přijít (pokud šablona vyžaduje)
+        cart_summary_text: summary,
+        total:           total.toLocaleString('cs-CZ'),
+        message:         note || 'Bez poznámky',
+        date:            new Date().toLocaleString('cs-CZ')
+        // přidej další proměnné, které vidíš v šabloně, např.:
+        // from_name: "Detailing Litoměřice Web",
+        // subject: `Nová objednávka od ${name}`,
+    };
+
+    const btn = document.getElementById('send-order-btn');
+    btn.disabled = true;
+    btn.textContent = 'Odesílá se...';
+
+    emailjs.send('service_grki78a', 'template_za7zkkk', params)
+        .then((response) => {
+            console.log('SUCCESS!', response.status, response.text);
+            document.getElementById('success-popup').classList.remove('hidden');
+            cart = [];
+            updateCartDisplay();
+            // vyčištění formuláře...
+        })
+        .catch((err) => {
+            console.error('EmailJS chyba:', err);
+            console.log('Status:', err.status);
+            console.log('Text:', err.text);
+            alert('Nepodařilo se odeslat objednávku.\n\nDetail chyby: ' + (err.text || 'Neznámá chyba'));
+        })
+        .finally(() => {
+            btn.disabled = false;
+            btn.textContent = 'ODESLAT OBJEDNÁVKU';
+        });
+}
 
     // Kontaktní formulář
     document.getElementById('kontakt-form').addEventListener('submit', function(e) {
